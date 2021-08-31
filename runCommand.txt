@@ -1,0 +1,14 @@
+1. tradingSystem
+
+mvn clean install
+docker build -t trading_system .
+docker run -p 8080:8080 --name trading_system -d trading_system
+
+2. tradingDB
+
+docker build -t trading_database .
+docker run --name trading_database -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d trading_database
+docker exec -it trading_database mysql -uroot -p
+password
+CREATE DATABASE trading_database;
+
