@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -27,8 +26,9 @@ import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TradeMessageControllerTest
+class TradeMessageControllerTest
 {
+
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -37,7 +37,7 @@ public class TradeMessageControllerTest
 
 	@Test
 	/*** valid input, return 200 ok ***/
-	public void whenValidInput_thenReturns200() throws Exception {
+	void whenValidInput_thenReturns200_For_addTradeMessage() throws Exception {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
@@ -61,7 +61,8 @@ public class TradeMessageControllerTest
 
 	@Test
 	/*** response should contain userId, currencyFrom, currencyTo, amountSell, amountBuy, rate, timePlaced, originatingCountry ***/
-	public void whenGetTradeMessage_thenReturns_userId_currencyFrom_currencyTo_amountSell_amountBuy_rate_timePlaced_originatingCountry() throws Exception {
+	void whenGetTradeMessage_thenReturns_userId_currencyFrom_currencyTo_amountSell_amountBuy_rate_timePlaced_originatingCountry_For_getTradeMessage() throws Exception {
+		// prepare data
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
@@ -71,6 +72,7 @@ public class TradeMessageControllerTest
 		List<TradeMessageResponseData> responseList = new ArrayList<>();
 		responseList.add(tradeMessageResponseData);
 
+		// when
 		Mockito.when(tradeMessageProcessService.getTradeMessage()).thenReturn(responseList);
 
 		mockMvc.perform(get("/tradeMessage/get"))
@@ -86,7 +88,7 @@ public class TradeMessageControllerTest
 
 	@Test
 	/*** if input the datetime with invalid format, return 400 bad request ***/
-	public void whenInValidDatetimeFormat_thenReturns400() throws Exception {
+	void whenInValidDatetimeFormat_thenReturns400_For_addTradeMessage() throws Exception {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
@@ -109,7 +111,7 @@ public class TradeMessageControllerTest
 
 	@Test
 	/*** if input the invalid country code, return 400 bad request ***/
-	public void whenInValidCountryCode_thenReturns400() throws Exception {
+	void whenInValidCountryCode_thenReturns400_For_addTradeMessage() throws Exception {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
@@ -132,7 +134,7 @@ public class TradeMessageControllerTest
 
 	@Test
 	/*** if input the string as the amount, return 400 bad request ***/
-	public void whenInValidAmount_thenReturns400() throws Exception {
+	void whenInValidAmount_thenReturns400_For_addTradeMessage() throws Exception {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 

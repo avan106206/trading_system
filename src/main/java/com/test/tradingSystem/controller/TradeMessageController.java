@@ -25,40 +25,44 @@ public class TradeMessageController
 	TradeMessageProcessService tradeMessageProcessService;
 
 	@PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
-	public ResponseEntity addTradeMessage(@RequestBody TradeMessageRequestData tradeMessageRequestData) {
+	public ResponseEntity<String> addTradeMessage(@RequestBody TradeMessageRequestData tradeMessageRequestData) {
 		try
 		{
-			tradeMessageProcessService.saveTradeMessage(tradeMessageRequestData);
-			ResponseEntity restResponse = new ResponseEntity("added successfully", HttpStatus.OK);
-			return restResponse;
+			tradeMessageProcessService.saveTradeMessage(tradeMessageProcessService.convertTradeMessageRequestDataToTradeMessageLog(tradeMessageRequestData));
+			return new ResponseEntity<>("added successfully", HttpStatus.OK);
 		}
 		catch(DateTimeParseException dex)
 		{
 			LOG.error("error occur on TradeMessageController.addTradeMessage()", dex);
-			ResponseEntity restResponse = new ResponseEntity("invalid datetime", HttpStatus.BAD_REQUEST);
-			return restResponse;
+			return new ResponseEntity<>("invalid datetime", HttpStatus.BAD_REQUEST);
+		}
+		catch(IllegalArgumentException ie)
+		{
+			if(ie.getMessage().contains("Enum.Currency")){
+				LOG.error("error occur on TradeMessageController.addTradeMessage()", ie);
+				return new ResponseEntity<>("invalid Currency", HttpStatus.BAD_REQUEST);
+			}else{
+				LOG.error("error occur on TradeMessageController.addTradeMessage()", ie);
+				return new ResponseEntity<>("invalid CountryCode", HttpStatus.BAD_REQUEST);
+			}
 		}
 		catch(Exception ex)
 		{
 			LOG.error("error occur on TradeMessageController.addTradeMessage()", ex);
-			ResponseEntity restResponse = new ResponseEntity("internal error", HttpStatus.INTERNAL_SERVER_ERROR);
-			return restResponse;
+			return new ResponseEntity<>("internal error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping("/get")
-	public ResponseEntity getTradeMessage() {
+	public ResponseEntity<List<TradeMessageResponseData>> getTradeMessage() {
 		try
 		{
-			List<TradeMessageResponseData> tradeMessageResponseDataList = tradeMessageProcessService.getTradeMessage();
-			ResponseEntity restResponse = new ResponseEntity(tradeMessageResponseDataList, HttpStatus.OK);
-			return restResponse;
+			return new ResponseEntity<>(tradeMessageProcessService.getTradeMessage(), HttpStatus.OK);
 		}
 		catch(Exception ex)
 		{
 			LOG.error("error occur on TradeMessageController.addTradeMessage()", ex);
-			ResponseEntity restResponse = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-			return restResponse;
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

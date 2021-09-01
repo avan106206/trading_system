@@ -1,5 +1,3 @@
 FROM openjdk:11
-COPY ./target/*.jar /Documents/mydocker/demo.jar
-WORKDIR /Documents/mydocker
-RUN sh -c 'touch demo.jar'
-ENTRYPOINT ["java","-jar","demo.jar"]
+copy ./target/tradingSystem-0.0.1-SNAPSHOT.jar tradingSystem-0.0.1-SNAPSHOT.jar
+CMD ["java","-jar","tradingSystem-0.0.1-SNAPSHOT.jar"]

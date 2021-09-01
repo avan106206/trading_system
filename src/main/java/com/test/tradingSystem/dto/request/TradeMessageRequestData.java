@@ -1,18 +1,15 @@
 package com.test.tradingSystem.dto.request;
 
-import com.test.tradingSystem.Enum.CountryCode;
-import com.test.tradingSystem.Enum.Currency;
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class TradeMessageRequestData
 {
 
 	private String userId;
 
-	private Currency currencyFrom;
+	private String currencyFrom;
 
-	private Currency currencyTo;
+	private String currencyTo;
 
 	private BigDecimal amountSell;
 
@@ -22,7 +19,7 @@ public class TradeMessageRequestData
 
 	private String timePlaced;
 
-	private CountryCode originatingCountry;
+	private String originatingCountry;
 
 	public String getUserId()
 	{
@@ -32,26 +29,6 @@ public class TradeMessageRequestData
 	public void setUserId(String userId)
 	{
 		this.userId = userId;
-	}
-
-	public Currency getCurrencyFrom()
-	{
-		return currencyFrom;
-	}
-
-	public void setCurrencyFrom(Currency currencyFrom)
-	{
-		this.currencyFrom = currencyFrom;
-	}
-
-	public Currency getCurrencyTo()
-	{
-		return currencyTo;
-	}
-
-	public void setCurrencyTo(Currency currencyTo)
-	{
-		this.currencyTo = currencyTo;
 	}
 
 	public BigDecimal getAmountSell()
@@ -84,17 +61,6 @@ public class TradeMessageRequestData
 		this.rate = rate;
 	}
 
-
-	public CountryCode getOriginatingCountry()
-	{
-		return originatingCountry;
-	}
-
-	public void setOriginatingCountry(CountryCode originatingCountry)
-	{
-		this.originatingCountry = originatingCountry;
-	}
-
 	public String getTimePlaced()
 	{
 		return timePlaced;
@@ -103,5 +69,35 @@ public class TradeMessageRequestData
 	public void setTimePlaced(String timePlaced)
 	{
 		this.timePlaced = timePlaced;
+	}
+
+	public String getCurrencyFrom()
+	{
+		return currencyFrom;
+	}
+
+	public void setCurrencyFrom(String currencyFrom)
+	{
+		this.currencyFrom = currencyFrom;
+	}
+
+	public String getCurrencyTo()
+	{
+		return currencyTo;
+	}
+
+	public void setCurrencyTo(String currencyTo)
+	{
+		this.currencyTo = currencyTo;
+	}
+
+	public String getOriginatingCountry()
+	{
+		return originatingCountry;
+	}
+
+	public void setOriginatingCountry(String originatingCountry)
+	{
+		this.originatingCountry = originatingCountry;
 	}
 }

@@ -1,14 +1,22 @@
 1. tradingSystem
 
 mvn clean install
-docker build -t trading_system .
-docker run -p 8080:8080 --name trading_system -d trading_system
+docker image build -t trading_system .
+docker run --network trading_system -p 8080:8080 --name trading_system -d trading_system
 
 2. tradingDB
 
-docker build -t trading_database .
-docker run --name trading_database -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d trading_database
+docker run --network trading_system -itd --name trading_database -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql
 docker exec -it trading_database mysql -uroot -p
 password
 CREATE DATABASE trading_database;
+
+
+
+
+
+docker network create test_network
+docker container run --name trading_db -p 3306:3306 --network test_network -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=trading_database -d mysql:8
+docker image build -t trading_system .
+docker container run --network test_network --name trading_system -p 8080:8080 -d trading_system
 

@@ -1,5 +1,7 @@
 package com.test.tradingSystem.service;
 
+import com.test.tradingSystem.Enum.CountryCode;
+import com.test.tradingSystem.Enum.Currency;
 import com.test.tradingSystem.Enum.DateTimeFormat;
 import com.test.tradingSystem.dao.TradeMessageLogDAO;
 import com.test.tradingSystem.dto.request.TradeMessageRequestData;
@@ -24,27 +26,17 @@ public class TradeMessageProcessServiceImpl implements TradeMessageProcessServic
 
 	@Override
 	@Transactional
-	public void saveTradeMessage(TradeMessageRequestData tradeMessageRequestData)
+	public void saveTradeMessage(TradeMessageLog tradeMessageLog)
 	{
-		DateTimeFormatter formatter = new DateTimeFormatterBuilder().parseCaseInsensitive()
-				.append(DateTimeFormatter.ofPattern(DateTimeFormat.dateTimeString.toString())).toFormatter();
-		LocalDateTime TimePlaced = LocalDateTime.parse(tradeMessageRequestData.getTimePlaced(), formatter);
-		TradeMessageLog tradeMessageLog = new TradeMessageLog();
-		tradeMessageLog.setAmountBuy(tradeMessageRequestData.getAmountBuy());
-		tradeMessageLog.setAmountSell(tradeMessageRequestData.getAmountSell());
-		tradeMessageLog.setCurrencyFrom(tradeMessageRequestData.getCurrencyFrom());
-		tradeMessageLog.setCurrencyTo(tradeMessageRequestData.getCurrencyTo());
-		tradeMessageLog.setRate(tradeMessageRequestData.getRate());
-		tradeMessageLog.setOriginatingCountry(tradeMessageRequestData.getOriginatingCountry());
-		tradeMessageLog.setUserId(tradeMessageRequestData.getUserId());
-		tradeMessageLog.setTimePlaced(TimePlaced);
+
 		tradeMessageLogDAO.save(tradeMessageLog);
 	}
 
 	@Override
 	public List<TradeMessageResponseData> getTradeMessage()
 	{
-		List<TradeMessageResponseData> tradeMessageList = new ArrayList<TradeMessageResponseData>();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateTimeFormat.dateTimeString.toString());
+		List<TradeMessageResponseData> tradeMessageList = new ArrayList<>();
 		tradeMessageLogDAO.findAll().forEach(
 				tradeMessage -> {
 					TradeMessageResponseData m = new TradeMessageResponseData();
@@ -55,10 +47,30 @@ public class TradeMessageProcessServiceImpl implements TradeMessageProcessServic
 					m.setRate(tradeMessage.getRate());
 					m.setOriginatingCountry(tradeMessage.getOriginatingCountry());
 					m.setUserId(tradeMessage.getUserId());
-					m.setTimePlaced(tradeMessage.getTimePlaced().toString());
+					m.setTimePlaced(tradeMessage.getTimePlaced().format(formatter));
 					tradeMessageList.add(m);
 				}
 		);
 		return tradeMessageList;
 	}
+
+	@Override
+	public TradeMessageLog convertTradeMessageRequestDataToTradeMessageLog(TradeMessageRequestData tradeMessageRequestData)
+	{
+		DateTimeFormatter formatter = new DateTimeFormatterBuilder().parseCaseInsensitive()
+				.append(DateTimeFormatter.ofPattern(DateTimeFormat.dateTimeString.toString())).toFormatter();
+		LocalDateTime TimePlaced = LocalDateTime.parse(tradeMessageRequestData.getTimePlaced(), formatter);
+		TradeMessageLog tradeMessageLog = new TradeMessageLog();
+		tradeMessageLog.setAmountBuy(tradeMessageRequestData.getAmountBuy());
+		tradeMessageLog.setAmountSell(tradeMessageRequestData.getAmountSell());
+		tradeMessageLog.setCurrencyFrom(Currency.valueOf(tradeMessageRequestData.getCurrencyFrom()));
+		tradeMessageLog.setCurrencyTo(Currency.valueOf(tradeMessageRequestData.getCurrencyTo()));
+		tradeMessageLog.setRate(tradeMessageRequestData.getRate());
+		tradeMessageLog.setOriginatingCountry(CountryCode.valueOf(tradeMessageRequestData.getOriginatingCountry()));
+		tradeMessageLog.setUserId(tradeMessageRequestData.getUserId());
+		tradeMessageLog.setTimePlaced(TimePlaced);
+		return tradeMessageLog;
+	}
+
+
 }

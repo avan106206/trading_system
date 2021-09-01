@@ -1,0 +1,39 @@
+version: '3.7'
+
+# Service
+services:
+  # Database MySQL
+  trading_db:
+    image: mysql:8.0.17
+    container_name: trading_db
+    #restart: always
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: trading_database
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - app-server-network
+  # APP Server
+  trading_system:
+    depends_on:
+      - trading_db
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - app-server-network
+
+# Volume
+volumes:
+    mysql-data:
+
+# Network
+networks:
+  app-server-network:
